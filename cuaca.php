@@ -49,21 +49,25 @@ function cuaca(){
 						// Data cuaca sekarang
 						$cuaca_sekarang = explode("Suhu : ", $value->nodeValue);
 						$suhu_sekarang = explode("Kelembaban : ", $cuaca_sekarang[1]);
+						$suhu_sekarang_minmax = explode(" - ", $suhu_sekarang[0]);
 						$kelembaban_sekarang = $suhu_sekarang[1];
+						$kelembaban_sekarang_minmax = explode(" - ", $kelembaban_sekarang);
 						
 					}else if($key == 2){
 						
 						// Data cuaca besok
 						$cuaca_besok = explode("Suhu : ", $value->nodeValue);
 						$suhu_besok = explode("Kelembaban : ", $cuaca_besok[1]);
+						$suhu_besok_minmax = explode(" - ", $suhu_besok[0]);
 						$kelembaban_besok = $suhu_besok[1];
+						$kelembaban_besok_minmax = explode(" - ", $kelembaban_besok);
 						
 					}
 				}
 				
 				$cells = array(
 							'kota' => $kota,
-							/* Latitude & Longitude Finder. aktifkan function di line no 118
+							/* Latitude & Longitude Finder. aktifkan function di line no 134
 							'maps' => array(							
 								'latitude' => latlng($kota, 'lat'),
 								'longitude' => latlng($kota, 'lng')
@@ -73,14 +77,26 @@ function cuaca(){
 								'sekarang' => array(
 									'tgl' => $sekarang[1],
 									'cuaca' => $cuaca_sekarang[0],
-									'suhu' => $suhu_sekarang[0],
-									'kelembaban' => $kelembaban_sekarang
+									'suhu' => array(
+										'min' => $suhu_sekarang_minmax[0],
+										'max' => ''.intval($suhu_sekarang_minmax[1]).''
+									),
+									'kelembaban' =>  array(
+										'min' => $kelembaban_sekarang_minmax[0],
+										'max' => str_replace(" %", "", $kelembaban_sekarang_minmax[1])
+									)
 								),
 								'besok' => array(
 									'tgl' => $besok[1],
 									'cuaca' => $cuaca_besok[0],
-									'suhu' => $suhu_besok[0],
-									'kelembaban' => $kelembaban_besok
+									'suhu' => array(
+										'min' => $suhu_besok_minmax[0],
+										'max' => ''.intval($suhu_besok_minmax[1]).''
+									),
+									'kelembaban' =>  array(
+										'min' => $kelembaban_besok_minmax[0],
+										'max' => str_replace(" %", "", $kelembaban_besok_minmax[1])
+									)
 								)
 							)
 						);
@@ -90,7 +106,7 @@ function cuaca(){
 		}
 	}
 		
-	return jsonin($rows);
+	return $rows;
 }
 
 function mycurl($url, $user_agent = "Googlebot/2.1 (http://www.googlebot.com/bot.html)") {
@@ -124,13 +140,4 @@ function latlng($kota, $find = "lng") {
 	$data = ($find != "lng" ? $lat : $lng);
 	return $data;
 }
-*/
-
-// Function untuk merubah data ARRAY menjadi JSON
-function jsonin($array){
-	header('Access-Control-Allow-Origin: *');
-	header('Content-Type: application/json');
-	return json_encode($array, JSON_PRETTY_PRINT);
-}
-	
-?> 																		
+*/														
